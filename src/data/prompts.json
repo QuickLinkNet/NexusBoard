@@ -1,0 +1,20 @@
+{
+  "prompts": [
+    {
+      "id": "1",
+      "title": "Abstract Realities: AI's Foray into Digital Sculpture",
+      "prompt": "A digital AI sculpture, gracefully formed on the left side, The sculpture showcases AI's ability to create abstract 3D art, blending digital precision with artistic creativity, set against a backdrop of White Space on the right for a striking visual impact",
+      "keywords": "digital AI sculpture, left side, abstract 3D art, digital precision, artistic creativity, White Space right, striking visual impact, AI ability, creative sculpture, digital art, abstract creation, artistic AI, 3D design, visual appeal, artistic innovation, precision art, abstract sculpture, creative impact, AI artist",
+      "expected_runs": "10",
+      "successful_runs": "10"
+    },
+    {
+      "id": "2",
+      "title": "Digital Eden: AI's Vision of a Virtual Garden",
+      "prompt": "An AI-generated virtual garden, vibrant and lush, displayed on the right side, The garden blends natural botanical elements with digital artistry, showcasing AI's capability to simulate natural environments, complemented by White Space on the left for immersive advertising",
+      "keywords": "AI-generated, virtual garden, right side, vibrant, lush, natural botanical elements, digital artistry, AI capability, simulate natural environments, White Space left, immersive advertising, digital nature, AI garden, virtual greenery, digital botany, natural simulation, immersive garden, environmental art, botanical AI, nature advertising",
+      "expected_runs": "10",
+      "successful_runs": "10"
+    }
+  ]
+}
