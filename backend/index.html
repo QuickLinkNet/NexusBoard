@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Live-Log Viewer</title>
+    <style>
+        body { background: #111; color: #0f0; font-family: monospace; padding: 20px; }
+        #log { white-space: pre-wrap; max-height: 90vh; overflow-y: auto; }
+        .error { color: #f00; } /* Rote Fehlermeldung */
+    </style>
+</head>
+<body>
+<h1>Live-Log</h1>
+<div id="log">Lade Logs...</div>
+
+<script>
+    const logElement = document.getElementById('log');
+
+    function fetchLog() {
+        fetch('server.log')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Fehler: ${response.status} (${response.statusText})`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                logElement.textContent = data;
+                logElement.scrollTop = logElement.scrollHeight;
+                logElement.classList.remove('error'); // Entfernt Fehlerstil bei Erfolg
+            })
+            .catch(error => {
+                logElement.innerHTML = `<span class="error">❌ ${error.message}</span>`;
+            });
+    }
+
+    setInterval(fetchLog, 2000); // alle 2 Sekunden aktualisieren
+</script>
+</body>
+</html>

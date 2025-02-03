@@ -4,7 +4,7 @@ const fs = require('fs');
 
 // Konfiguration für Windows und ASUS NAS
 const config = {
-  nasPath: '\\\\192.168.2.49\\Web\\vhosts\\my-dashboard\\backend',
+  nasPath: '\\\\192.168.2.49\\Web\\vhosts\\NexusBoard_Backend',
   sourcePath: path.join(__dirname, '..'),
 };
 
