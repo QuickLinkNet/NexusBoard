@@ -7,9 +7,9 @@ class ApiService {
   private static instance: ApiService;
   private isBackendAvailable: boolean = false;
   private hasCheckedBackend: boolean = false;
+  private checkingBackend: Promise<void> | null = null;
 
-  private constructor() {
-  }
+  private constructor() {}
 
   public static getInstance(): ApiService {
     if (!ApiService.instance) {
@@ -19,15 +19,25 @@ class ApiService {
   }
 
   private async checkBackendAvailability(): Promise<void> {
-    if (this.hasCheckedBackend) return; // Verhindert mehrfache Aufrufe
-    this.hasCheckedBackend = true;
-
-    try {
-      const response = await axios.get(`${BACKEND_URL}/api/health`);
-      this.isBackendAvailable = response.data?.success === true;
-    } catch (error) {
-      this.isBackendAvailable = false;
+    if (this.checkingBackend) {
+      return this.checkingBackend;
     }
+
+    this.checkingBackend = (async () => {
+      if (this.hasCheckedBackend) return;
+
+      try {
+        const response = await axios.get(`${BACKEND_URL}/api/health`);
+        this.isBackendAvailable = response.data?.success === true;
+      } catch (error) {
+        this.isBackendAvailable = false;
+      } finally {
+        this.hasCheckedBackend = true;
+        this.checkingBackend = null;
+      }
+    })();
+
+    return this.checkingBackend;
   }
 
   private getAuthHeaders() {
@@ -39,6 +49,8 @@ class ApiService {
   }
 
   public async getPrompts() {
+    await this.checkBackendAvailability();
+
     try {
       if (this.isBackendAvailable) {
         const response = await axios.get(`${BACKEND_URL}/api/prompts`, {

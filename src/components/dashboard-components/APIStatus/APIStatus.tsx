@@ -44,11 +44,12 @@ export default function APIStatus() {
     }
   ]);
   const [isChecking, setIsChecking] = useState(false);
+  const [checkInterval, setCheckInterval] = useState<NodeJS.Timeout | null>(null);
 
   const checkEndpoint = async (endpoint: EndpointStatus): Promise<Partial<EndpointStatus>> => {
     const startTime = performance.now();
     try {
-      const response = await fetch(`http://192.168.2.49:3000${endpoint.endpoint}`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint.endpoint}`, {
         method: endpoint.method,
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -85,6 +86,8 @@ export default function APIStatus() {
   };
 
   const checkAllEndpoints = async () => {
+    if (isChecking) return;
+
     setIsChecking(true);
     try {
       const updatedEndpoints = await Promise.all(
@@ -105,9 +108,22 @@ export default function APIStatus() {
 
   useEffect(() => {
     checkAllEndpoints();
-    const interval = setInterval(checkAllEndpoints, 30000); // Check every 30 seconds
-    return () => clearInterval(interval);
-  }, []);
+
+    // Cleanup previous interval if it exists
+    if (checkInterval) {
+      clearInterval(checkInterval);
+    }
+
+    // Set new interval
+    const interval = setInterval(checkAllEndpoints, 30000);
+    setCheckInterval(interval);
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, []); // Empty dependency array to run only once on mount
 
   const getStatusIcon = (status: string) => {
     switch (status) {

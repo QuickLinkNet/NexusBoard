@@ -119,7 +119,7 @@ export function Login({ onLogin }: LoginProps) {
               onChange={(e) => setEmailOrUsername(e.target.value)}
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-              placeholder="admin"
+              placeholder="Username"
             />
           </div>
           <div className="mb-6">
@@ -133,7 +133,7 @@ export function Login({ onLogin }: LoginProps) {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
-              placeholder="123"
+              placeholder="Passwort"
             />
           </div>
           <button
@@ -144,10 +144,6 @@ export function Login({ onLogin }: LoginProps) {
             {isLoading ? 'Anmeldung...' : 'Anmelden'}
           </button>
         </form>
-        <p className="mt-4 text-sm text-gray-600 text-center">
-          Benutzen Sie: admin / 123
-        </p>
-
         {debugInfo && (
           <div className="mt-6 p-3 bg-gray-50 rounded-md">
             <h3 className="text-sm font-semibold text-gray-700 mb-2">Debug Information:</h3>

@@ -2,9 +2,11 @@ import express from 'express';
 import { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import * as fs from 'fs';
+import * as path from 'path';
 
 import { authenticateToken } from './src/middleware/auth';
-import { successResponse } from './src/utils/responses';
+import { successResponse, errorResponse } from './src/utils/responses';
 import { promptRoutes } from './src/routes/prompts';
 import { layoutRoutes } from './src/routes/layouts';
 import { authRoutes } from './src/routes/auth';
@@ -14,6 +16,23 @@ import { metaRoutes } from './src/routes/meta';
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// Server Log Route (ohne Authentifizierung)
+app.get('/api/server-log', (req: Request, res: Response) => {
+    try {
+        const logPath = path.join(__dirname, 'server.log');
+        if (!fs.existsSync(logPath)) {
+            return res.status(404).json(errorResponse('Log file not found'));
+        }
+
+        const log = fs.readFileSync(logPath, 'utf-8');
+        // Sende die letzten 1000 Zeilen
+        const lines = log.split('\n').slice(-1000).join('\n');
+        res.status(200).json(successResponse(lines));
+    } catch (error) {
+        res.status(500).json(errorResponse('Error reading log file'));
+    }
+});
 
 // Layout-Routen
 app.get('/api/layout/:id', layoutRoutes.getOne);
