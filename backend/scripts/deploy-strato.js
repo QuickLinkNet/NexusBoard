@@ -19,7 +19,6 @@ async function deploy() {
             { source: 'dist/*', type: 'folder' },
             { source: 'package*.json', type: 'file' },
             { source: '.htaccess', type: 'file' },
-            { source: 'index.html', type: 'file' },
             { source: 'scripts/server-control.sh', type: 'file' }
         ];
 

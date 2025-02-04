@@ -135,7 +135,7 @@ Server-Logs werden in `server.log` geschrieben. Anzeigen mit:
 tail -f server.log
 
 # Auf Strato
-ssh u2915078@h2915078.stratoserver.net "tail -f /kunden/pages/b1/f3/d0015521/home/htdocs/x/server.log"
+ssh u2915078@h2915078.stratoserver.net "tail -f /kunden/pages/b1/f3/d0015521/home/htdocs/x/backend/server.log"
 ```
 
 ## 🔒 Sicherheit
