@@ -10,7 +10,7 @@ export const promptRoutes = {
         db.query('SELECT COUNT(*) AS total FROM prompts', (err, totalResults) => {
             if (err) return res.status(500).json(errorResponse(err instanceof Error ? err.message : 'Datenbankfehler'));
             const total = totalResults[0].total;
-            
+
             db.query('SELECT * FROM prompts LIMIT ? OFFSET ?', [limit, offset], (err, promptsResults) => {
                 if (err) return res.status(500).json(errorResponse(err instanceof Error ? err.message : 'Datenbankfehler'));
                 res.json(successResponse({ prompts: promptsResults, total }));
@@ -41,7 +41,7 @@ export const promptRoutes = {
     create: async (req: Request, res: Response) => {
         try {
             const prompts = Array.isArray(req.body) ? req.body : [req.body];
-            
+
             for (const prompt of prompts) {
                 if (!prompt.title || !prompt.prompt) {
                     return res.status(400).json(errorResponse('Title und Prompt sind erforderlich'));
@@ -61,25 +61,25 @@ export const promptRoutes = {
 
                     const result = await new Promise((resolve, reject) => {
                         db.query(
-                            'INSERT INTO prompts (title, prompt, keywords, expected_runs, successful_runs) VALUES (?, ?, ?, ?, ?)',
-                            [
-                                promptData.title,
-                                promptData.prompt,
-                                promptData.keywords,
-                                promptData.expected_runs,
-                                promptData.successful_runs
-                            ],
-                            (err, result) => {
-                                if (err) {
-                                    console.error('DB Error:', err);
-                                    reject(err);
-                                } else {
-                                    resolve({
-                                        id: result.insertId,
-                                        ...promptData
-                                    });
-                                }
-                            }
+                          'INSERT INTO prompts (title, prompt, keywords, expected_runs, successful_runs) VALUES (?, ?, ?, ?, ?)',
+                          [
+                              promptData.title,
+                              promptData.prompt,
+                              promptData.keywords,
+                              promptData.expected_runs,
+                              promptData.successful_runs
+                          ],
+                          (err, result) => {
+                              if (err) {
+                                  console.error('DB Error:', err);
+                                  reject(err);
+                              } else {
+                                  resolve({
+                                      id: result.insertId,
+                                      ...promptData
+                                  });
+                              }
+                          }
                         );
                     });
 
@@ -100,15 +100,39 @@ export const promptRoutes = {
 
     update: (req: Request, res: Response) => {
         const id = req.params.id;
-        const { title, prompt, keywords, expected_runs, successful_runs } = req.body;
-        db.query(
-            'UPDATE prompts SET title = ?, prompt = ?, keywords = ?, expected_runs = ?, successful_runs = ? WHERE id = ?',
-            [title, prompt, keywords, expected_runs, successful_runs, id],
-            (err, result) => {
-                if (err) return res.status(500).json(errorResponse(err instanceof Error ? err.message : 'Datenbankfehler'));
-                res.json(successResponse(null, 'Prompt aktualisiert'));
+        const updateData = req.body;
+
+        // Hole zuerst den existierenden Prompt
+        db.query('SELECT * FROM prompts WHERE id = ?', [id], (err, results) => {
+            if (err) {
+                return res.status(500).json(errorResponse(err instanceof Error ? err.message : 'Datenbankfehler'));
             }
-        );
+
+            if (results.length === 0) {
+                return res.status(404).json(errorResponse('Prompt nicht gefunden'));
+            }
+
+            const existingPrompt = results[0];
+
+            // Merge existierende Daten mit Update-Daten
+            const updatedData = {
+                ...existingPrompt,
+                ...updateData
+            };
+
+            // Führe das Update durch
+            db.query(
+              'UPDATE prompts SET successful_runs = ? WHERE id = ?',
+              [updatedData.successful_runs, id],
+              (updateErr, result) => {
+                  if (updateErr) {
+                      console.error('Update error:', updateErr);
+                      return res.status(500).json(errorResponse(updateErr instanceof Error ? updateErr.message : 'Datenbankfehler'));
+                  }
+                  res.json(successResponse(updatedData, 'Prompt aktualisiert'));
+              }
+            );
+        });
     },
 
     delete: (req: Request, res: Response) => {

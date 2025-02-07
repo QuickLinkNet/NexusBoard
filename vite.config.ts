@@ -4,7 +4,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   build: {
-    target: 'esnext'
+    target: 'esnext',
+    outDir: 'dist',
+    assetsDir: 'assets',
+    emptyOutDir: true,
+    sourcemap: false,
+    // Setze die Base URL für Production
+    base: '/'
   },
   optimizeDeps: {
     include: ['lucide-react']
