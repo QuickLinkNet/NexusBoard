@@ -16,28 +16,28 @@ export default function APIStatus() {
   const [endpoints, setEndpoints] = useState<EndpointStatus[]>([
     {
       name: 'Backend Health',
-      endpoint: '/api/health',
+      endpoint: '/health',
       method: 'GET',
       status: 'offline',
       lastChecked: new Date()
     },
     {
       name: 'Prompts API',
-      endpoint: '/api/prompts',
+      endpoint: '/prompts',
       method: 'GET',
       status: 'offline',
       lastChecked: new Date()
     },
     {
       name: 'Meta Generator',
-      endpoint: '/api/meta/generate',
+      endpoint: '/meta/generate',
       method: 'POST',
       status: 'offline',
       lastChecked: new Date()
     },
     {
       name: 'Authentication',
-      endpoint: '/api/me',
+      endpoint: '/me',
       method: 'GET',
       status: 'offline',
       lastChecked: new Date()

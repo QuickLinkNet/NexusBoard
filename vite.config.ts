@@ -3,14 +3,13 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  base: '', // Leerer Base-Pfad, damit relative Pfade ohne führenden Slash generiert werden
   build: {
     target: 'esnext',
     outDir: 'dist',
     assetsDir: 'assets',
     emptyOutDir: true,
-    sourcemap: false,
-    // Setze die Base URL für Production
-    base: '/'
+    sourcemap: false
   },
   optimizeDeps: {
     include: ['lucide-react']

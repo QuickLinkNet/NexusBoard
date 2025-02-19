@@ -1,5 +1,4 @@
-import bcrypt from 'bcryptjs';
-import users from '../data/users.json';
+import { apiService } from './apiService';
 
 export interface User {
   id: number;
@@ -10,31 +9,33 @@ export interface User {
   updated_at: string;
 }
 
-export async function login(emailOrUsername: string, password: string): Promise<{ user: User; token: string } | null> {
+export async function login(username: string, password: string): Promise<{ user: User; token: string } | null> {
   try {
-    // Finde den Benutzer anhand des Benutzernamens oder der E-Mail
-    const user = users.users.find(
-      u => u.username === emailOrUsername || u.email === emailOrUsername
-    );
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
+    });
 
-    if (!user) {
+    if (!response.ok) {
       return null;
     }
 
-    // Vergleiche das Passwort
-    if (password === '123' && emailOrUsername === 'admin') {
-      const { password: _, ...userWithoutPassword } = user;
-      // Generiere einen einfachen Token
-      const token = btoa(`${user.username}:${Date.now()}`);
+    const data = await response.json();
+
+    if (data.success && data.data) {
+      localStorage.setItem('token', data.data.token);
       return {
-        user: userWithoutPassword,
-        token
+        user: data.data.user,
+        token: data.data.token
       };
     }
 
     return null;
   } catch (error) {
     console.error('Login error:', error);
-    throw error;
+    return null;
   }
 }

@@ -16,32 +16,27 @@ function App() {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          // Prüfe ob der Token noch gültig ist
-          const isAvailable = await apiService.getServerStatus();
-          if (isAvailable) {
-            // Dekodiere den Base64-Token
-            const decodedToken = atob(token);
-            const [username, timestamp] = decodedToken.split(':');
+          const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/me`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
 
-            // Prüfe ob der Token nicht zu alt ist (24 Stunden)
-            const tokenAge = Date.now() - parseInt(timestamp);
-            const maxAge = 24 * 60 * 60 * 1000; // 24 Stunden
-
-            if (tokenAge <= maxAge) {
+          if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.data.user) {
               setAuth({
                 isAuthenticated: true,
-                user: {
-                  username,
-                  role: 'admin'
-                }
+                user: data.data.user
               });
             } else {
-              // Token ist abgelaufen
               localStorage.removeItem('token');
             }
+          } else {
+            localStorage.removeItem('token');
           }
         } catch (error) {
-          console.error('Auto-login failed:', error);
+          console.error('Auth check failed:', error);
           localStorage.removeItem('token');
         }
       }

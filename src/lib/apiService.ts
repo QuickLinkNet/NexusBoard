@@ -1,7 +1,7 @@
 import axios from 'axios';
 import dummyData from '../data/prompts.json';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "/api";
 
 class ApiService {
   private static instance: ApiService;
@@ -27,7 +27,7 @@ class ApiService {
       if (this.hasCheckedBackend) return;
 
       try {
-        const response = await axios.get(`${BACKEND_URL}/api/health`);
+        const response = await axios.get(`${BACKEND_URL}/health`);
         this.isBackendAvailable = response.data?.success === true;
       } catch (error) {
         this.isBackendAvailable = false;
@@ -53,7 +53,7 @@ class ApiService {
 
     try {
       if (this.isBackendAvailable) {
-        const response = await axios.get(`${BACKEND_URL}/api/prompts`, {
+        const response = await axios.get(`${BACKEND_URL}/prompts`, {
           headers: this.getAuthHeaders()
         });
         if (response.data?.success) {
@@ -74,7 +74,7 @@ class ApiService {
       }
 
       const response = await axios.post(
-        `${BACKEND_URL}/api/meta/generate`,
+        `${BACKEND_URL}/meta/generate`,
         { imagesPath, outputPath },
         { headers: this.getAuthHeaders() }
       );
@@ -95,7 +95,7 @@ class ApiService {
   public async createPrompt(promptData: any) {
     try {
       if (this.isBackendAvailable) {
-        const response = await axios.post(`${BACKEND_URL}/api/prompts`, promptData, {
+        const response = await axios.post(`${BACKEND_URL}/prompts`, promptData, {
           headers: this.getAuthHeaders()
         });
         if (response.data?.success) {
@@ -119,7 +119,7 @@ class ApiService {
   public async updatePrompt(id: string, promptData: any) {
     try {
       if (this.isBackendAvailable) {
-        const response = await axios.put(`${BACKEND_URL}/api/prompts/${id}`, promptData, {
+        const response = await axios.put(`${BACKEND_URL}/prompts/${id}`, promptData, {
           headers: this.getAuthHeaders()
         });
         if (response.data?.success) {
@@ -144,7 +144,7 @@ class ApiService {
   public async setPromptSuccessful(id: string) {
     try {
       if (this.isBackendAvailable) {
-        const response = await axios.put(`${BACKEND_URL}/api/prompts/${id}`, {
+        const response = await axios.put(`${BACKEND_URL}/prompts/${id}`, {
           successful_runs: "10"
         }, {
           headers: this.getAuthHeaders()
@@ -167,7 +167,7 @@ class ApiService {
   public async deletePrompt(id: string) {
     try {
       if (this.isBackendAvailable) {
-        const response = await axios.delete(`${BACKEND_URL}/api/prompts/${id}`, {
+        const response = await axios.delete(`${BACKEND_URL}/prompts/${id}`, {
           headers: this.getAuthHeaders()
         });
         if (response.data?.success) {

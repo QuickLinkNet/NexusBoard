@@ -8,12 +8,11 @@ interface LoginProps {
 }
 
 export function Login({ onLogin }: LoginProps) {
-  const [emailOrUsername, setEmailOrUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [serverStatus, setServerStatus] = useState<'online' | 'offline' | 'checking'>('checking');
-  const [debugInfo, setDebugInfo] = useState<any>(null);
 
   useEffect(() => {
     checkServerStatus();
@@ -33,33 +32,17 @@ export function Login({ onLogin }: LoginProps) {
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    setDebugInfo(null);
 
     try {
-      const result = await login(emailOrUsername, password);
-
-      setDebugInfo({
-        attemptedCredentials: {
-          emailOrUsername,
-          password: '***'
-        },
-        result: result ? 'success' : 'failed',
-        timestamp: new Date().toISOString()
-      });
+      const result = await login(username, password);
 
       if (result) {
-        // Speichere den Token
-        localStorage.setItem('token', result.token);
         onLogin(result.user);
       } else {
         setError('Ungültige Anmeldedaten');
       }
     } catch (err) {
       setError('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
-      setDebugInfo({
-        error: err instanceof Error ? err.message : 'Unknown error',
-        timestamp: new Date().toISOString()
-      });
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +64,7 @@ export function Login({ onLogin }: LoginProps) {
       case 'online':
         return 'Backend verbunden';
       case 'offline':
-        return 'Offline Modus';
+        return 'Backend nicht erreichbar';
       default:
         return 'Prüfe Server...';
     }
@@ -109,14 +92,14 @@ export function Login({ onLogin }: LoginProps) {
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="emailOrUsername">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
               Benutzername
             </label>
             <input
               type="text"
-              id="emailOrUsername"
-              value={emailOrUsername}
-              onChange={(e) => setEmailOrUsername(e.target.value)}
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
               placeholder="Username"
@@ -138,20 +121,12 @@ export function Login({ onLogin }: LoginProps) {
           </div>
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || serverStatus === 'offline'}
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-400"
           >
             {isLoading ? 'Anmeldung...' : 'Anmelden'}
           </button>
         </form>
-        {debugInfo && (
-          <div className="mt-6 p-3 bg-gray-50 rounded-md">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Debug Information:</h3>
-            <pre className="text-xs text-gray-600 overflow-auto max-h-40">
-              {JSON.stringify(debugInfo, null, 2)}
-            </pre>
-          </div>
-        )}
       </div>
     </div>
   );

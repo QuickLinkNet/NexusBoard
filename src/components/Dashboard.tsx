@@ -5,7 +5,7 @@ import { PromptManagement } from './dashboard-components/PromptManagement/Prompt
 import { MetadataManagement } from './dashboard-components/MetadataManagement/MetadataManagement';
 import APIStatus from './dashboard-components/APIStatus/APIStatus';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { GripVertical } from 'lucide-react';
+import { GripVertical, X } from 'lucide-react';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -126,6 +126,19 @@ export function Dashboard({ onLogout }: DashboardProps) {
     alert('Dashboard-Layout wurde gespeichert!');
   };
 
+  const handleRemoveComponent = (itemId: string) => {
+    const newLayout = layout.filter(item => item.i !== itemId);
+    const componentType = itemId.split('-')[0];
+    const newActiveComponents = activeComponents.filter(type => type !== componentType);
+
+    setLayout(newLayout);
+    setActiveComponents(newActiveComponents);
+
+    // Optional: Automatisch speichern nach dem Entfernen
+    localStorage.setItem('dashboardLayout', JSON.stringify(newLayout));
+    localStorage.setItem('dashboardComponents', JSON.stringify(newActiveComponents));
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
       <Header
@@ -146,7 +159,7 @@ export function Dashboard({ onLogout }: DashboardProps) {
           isDraggable
           isResizable
           margin={[16, 16]}
-          draggableHandle=".widget-drag-handle"
+          draggableHandle=".drag-handle"
           containerPadding={[0, 0]}
         >
           {layout.map((item) => {
@@ -156,11 +169,18 @@ export function Dashboard({ onLogout }: DashboardProps) {
 
             return WidgetComponent ? (
               <div key={item.i} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
-                <div className="widget-drag-handle bg-gray-50 px-4 py-2 cursor-move flex items-center justify-between border-b border-gray-200 flex-shrink-0">
-                  <div className="flex items-center gap-2">
+                <div className="bg-gray-50 px-4 py-2 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
+                  <div className="flex items-center gap-2 drag-handle cursor-move flex-1">
                     <GripVertical className="w-4 h-4 text-gray-400" />
                     <h3 className="font-medium text-gray-700">{widgetConfig.title}</h3>
                   </div>
+                  <button
+                    onClick={() => handleRemoveComponent(item.i)}
+                    className="p-1 hover:bg-gray-200 rounded-md transition-colors ml-2"
+                    title="Komponente entfernen"
+                  >
+                    <X className="w-4 h-4 text-gray-500" />
+                  </button>
                 </div>
                 <div className="flex-1 overflow-auto">
                   <WidgetComponent />
