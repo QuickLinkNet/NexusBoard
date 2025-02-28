@@ -1,6 +1,4 @@
 <?php
-require_once __DIR__ . '/../config/Database.php';
-
 class Prompt {
     private $conn;
 
@@ -10,6 +8,16 @@ class Prompt {
 
     public function getAll() {
         $stmt = $this->conn->query("SELECT * FROM prompts ORDER BY id DESC");
+        return $stmt->fetchAll();
+    }
+
+    public function getPending($limit = null) {
+        $sql = "SELECT * FROM prompts WHERE CAST(expected_runs AS SIGNED) > CAST(successful_runs AS SIGNED) ORDER BY id DESC";
+        if ($limit !== null && $limit > 0) {
+            $sql .= " LIMIT " . intval($limit);
+        }
+
+        $stmt = $this->conn->query($sql);
         return $stmt->fetchAll();
     }
 
@@ -51,6 +59,17 @@ class Prompt {
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
 
+        return $this->getById($id);
+    }
+
+    public function incrementSuccessfulRuns($id) {
+        $stmt = $this->conn->prepare("
+            UPDATE prompts
+            SET successful_runs = CAST(successful_runs AS SIGNED) + 1
+            WHERE id = ?
+        ");
+
+        $stmt->execute([$id]);
         return $this->getById($id);
     }
 
