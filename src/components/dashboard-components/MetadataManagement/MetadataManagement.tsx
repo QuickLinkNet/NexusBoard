@@ -28,16 +28,22 @@ export function MetadataManagement() {
   const [imageFiles, setImageFiles] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (!files) return;
+    if (!files || files.length === 0) {
+      setError('Keine Dateien ausgewählt');
+      return;
+    }
 
     const fileNames: string[] = [];
     for (let i = 0; i < files.length; i++) {
-      const name = files[i].name;
-      if (name.startsWith('quicklink_') || name.startsWith('drunkenmunkey1986_86250_')) {
-        fileNames.push(name);
-      }
+      fileNames.push(files[i].name);
     }
 
     setImageFiles(fileNames);
@@ -56,33 +62,64 @@ export function MetadataManagement() {
     try {
       // Hole alle Prompts
       const promptsResponse = await apiService.getPrompts();
-      const prompts = promptsResponse.prompts;
+
+      // Sicherstellen, dass prompts ein Array ist
+      const prompts = Array.isArray(promptsResponse.prompts)
+        ? promptsResponse.prompts
+        : [];
+
+      if (prompts.length === 0) {
+        throw new Error('Keine Prompts gefunden. Bitte fügen Sie zuerst Prompts hinzu.');
+      }
 
       // Erstelle Metadata für jedes Bild
       const metadata = [];
 
       for (const imageName of imageFiles) {
         let promptParts: string[];
+        let promptText = '';
+
+        // Verschiedene Dateinamenformate erkennen
         if (imageName.startsWith('quicklink_')) {
           promptParts = imageName.split('_').slice(1, -2);
-        } else {
+          promptText = promptParts.join(' ');
+        } else if (imageName.startsWith('drunkenmunkey1986_86250_')) {
           promptParts = imageName.split('_').slice(2, -2);
+          promptText = promptParts.join(' ');
+        } else {
+          // Für andere Dateien versuchen, einen allgemeinen Ansatz zu verwenden
+          // Entferne Dateiendung und Zahlen/Hashes am Ende
+          const nameWithoutExt = imageName.replace(/\.[^/.]+$/, "");
+          promptText = nameWithoutExt.replace(/_[a-f0-9-]+$/, "").replace(/_/g, ' ');
         }
 
-        const prompt = promptParts.join(' ');
-
         // Suche nach dem passenden Prompt in der Datenbank
+        let matchFound = false;
+
         for (const item of prompts) {
-          if (item.prompt.includes(prompt)) {
+          // Prüfe, ob der Prompt-Text im Prompt des Items enthalten ist
+          if (item.prompt && item.prompt.toLowerCase().includes(promptText.toLowerCase())) {
             metadata.push({
               filename: imageName,
-              title: item.title,
-              keywords: `"${item.keywords.split(/\s+/).join(', ')}"`,
+              title: item.title || 'Kein Titel',
+              keywords: item.keywords || '',
               category: "8",
               releases: ""
             });
+            matchFound = true;
             break;
           }
+        }
+
+        // Wenn kein passender Prompt gefunden wurde, füge trotzdem Metadaten hinzu
+        if (!matchFound) {
+          metadata.push({
+            filename: imageName,
+            title: 'Kein passender Prompt gefunden',
+            keywords: '',
+            category: "8",
+            releases: ""
+          });
         }
       }
 
@@ -115,13 +152,18 @@ export function MetadataManagement() {
 
   const generateCSV = (metadata: any[]) => {
     const header = ['Filename', 'Title', 'Keywords', 'Category', 'Releases'];
-    const rows = metadata.map(item => [
-      item.filename,
-      item.title,
-      item.keywords,
-      item.category,
-      item.releases
-    ]);
+    const rows = metadata.map(item => {
+      // Stelle sicher, dass Keywords in Anführungszeichen stehen
+      const keywordsFormatted = `"${item.keywords}"`;
+
+      return [
+        item.filename,
+        item.title,
+        keywordsFormatted,
+        item.category,
+        item.releases
+      ];
+    });
 
     return [
       header.join(','),
@@ -139,27 +181,43 @@ export function MetadataManagement() {
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Bilder auswählen
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <button
+              type="button"
+              onClick={triggerFileInput}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 cursor-pointer"
+            >
+              <FolderOpen className="w-4 h-4" />
+              <span>Bilder auswählen</span>
+            </button>
+
             <input
-              type="file"
               ref={fileInputRef}
+              type="file"
               onChange={handleFileSelect}
               multiple
               className="hidden"
               accept="image/*"
             />
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
-            >
-              <FolderOpen className="w-4 h-4" />
-              Bilder auswählen
-            </button>
+
+            {imageFiles.length > 0 && (
+              <span className="py-2 text-sm text-gray-600">
+                {imageFiles.length} Dateien ausgewählt
+              </span>
+            )}
           </div>
           {imageFiles.length > 0 && (
-            <p className="mt-2 text-sm text-gray-600">
-              {imageFiles.length} passende Bilder gefunden
-            </p>
+            <div className="mt-2 text-sm text-gray-600 max-h-40 overflow-y-auto border p-2 rounded">
+              <p className="font-medium mb-1">Ausgewählte Dateien:</p>
+              <ul className="list-disc pl-5">
+                {imageFiles.slice(0, 10).map((file, index) => (
+                  <li key={index}>{file}</li>
+                ))}
+                {imageFiles.length > 10 && (
+                  <li>...und {imageFiles.length - 10} weitere</li>
+                )}
+              </ul>
+            </div>
           )}
         </div>
 

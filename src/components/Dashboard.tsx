@@ -1,19 +1,11 @@
-import React, { useState } from 'react';
-import { Header } from './Header';
-import { ComponentOption, ComponentCategory } from '../types/components';
-import { PromptManagement } from './dashboard-components/PromptManagement/PromptManagement';
-import { MetadataManagement } from './dashboard-components/MetadataManagement/MetadataManagement';
-import APIStatus from './dashboard-components/APIStatus/APIStatus';
+import React, { useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { GripVertical, X } from 'lucide-react';
-import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+import { WidgetMenu } from './WidgetMenu';
+import { ComponentOption, ComponentCategory } from '../types/components';
+import APIStatus from './dashboard-components/APIStatus/APIStatus';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
-
-interface DashboardProps {
-  onLogout: () => void;
-}
 
 interface LayoutItem {
   i: string;
@@ -34,72 +26,56 @@ interface WidgetConfig {
 }
 
 const componentMap: Record<string, WidgetConfig> = {
-  promptManagement: {
-    id: 'promptManagement',
-    component: PromptManagement,
-    defaultSize: { w: 12, h: 6 },
-    minSize: { w: 8, h: 4 },
-    title: 'Prompt Management'
-  },
-  metadataManagement: {
-    id: 'metadataManagement',
-    component: MetadataManagement,
-    defaultSize: { w: 12, h: 6 },
-    minSize: { w: 8, h: 4 },
-    title: 'Metadata Generator'
-  },
   apiStatus: {
     id: 'apiStatus',
     component: APIStatus,
-    defaultSize: { w: 12, h: 6 },
-    minSize: { w: 6, h: 4 },
+    defaultSize: { w: 6, h: 4 },
+    minSize: { w: 2, h: 2 },
     title: 'API Status'
   }
 };
 
-export function Dashboard({ onLogout }: DashboardProps) {
+export function Dashboard() {
   const [layout, setLayout] = useState<LayoutItem[]>(() => {
-    const saved = localStorage.getItem('dashboardLayout');
-    return saved ? JSON.parse(saved) : [];
+    const savedLayout = localStorage.getItem('dashboardLayout');
+    return savedLayout ? JSON.parse(savedLayout) : [];
   });
 
-  const [activeComponents, setActiveComponents] = useState<string[]>(() => {
-    const saved = localStorage.getItem('dashboardComponents');
-    return saved ? JSON.parse(saved) : [];
+  const [activeWidgets, setActiveWidgets] = useState<string[]>(() => {
+    const savedWidgets = localStorage.getItem('dashboardWidgets');
+    return savedWidgets ? JSON.parse(savedWidgets) : [];
   });
 
   const availableComponents: ComponentCategory[] = [
     {
-      name: 'Widgets',
-      components: [
-        {
-          id: 'promptManagement',
-          name: 'Prompt Management',
-          type: 'promptManagement',
+      name: 'Verfügbare Widgets',
+      components: Object.entries(componentMap)
+        .filter(([type]) => !activeWidgets.includes(type))
+        .map(([type, config]) => ({
+          id: type,
+          name: config.title,
+          type: type,
           category: 'Widgets',
-          component: PromptManagement
-        },
-        {
-          id: 'metadataManagement',
-          name: 'Metadata Generator',
-          type: 'metadataManagement',
+          component: config.component
+        }))
+    },
+    {
+      name: 'Aktive Widgets',
+      components: Object.entries(componentMap)
+        .filter(([type]) => activeWidgets.includes(type))
+        .map(([type, config]) => ({
+          id: type,
+          name: config.title,
+          type: type,
           category: 'Widgets',
-          component: MetadataManagement
-        },
-        {
-          id: 'apiStatus',
-          name: 'API Status',
-          type: 'apiStatus',
-          category: 'Widgets',
-          component: APIStatus
-        }
-      ]
+          component: config.component
+        }))
     }
   ];
 
   const handleComponentSelect = (component: ComponentOption) => {
     const widgetConfig = componentMap[component.type];
-    if (!widgetConfig) return;
+    if (!widgetConfig || activeWidgets.includes(component.type)) return;
 
     const newId = `${component.type}-${Date.now()}`;
     const newLayoutItem: LayoutItem = {
@@ -113,83 +89,127 @@ export function Dashboard({ onLogout }: DashboardProps) {
     };
 
     setLayout([...layout, newLayoutItem]);
-    setActiveComponents([...activeComponents, component.type]);
+    setActiveWidgets([...activeWidgets, component.type]);
+  };
+
+  const handleRemoveWidget = (itemId: string) => {
+    const newLayout = layout.filter(item => item.i !== itemId);
+    const componentType = itemId.split('-')[0];
+    const newActiveWidgets = activeWidgets.filter(type => type !== componentType);
+    
+    setLayout(newLayout);
+    setActiveWidgets(newActiveWidgets);
   };
 
   const handleLayoutChange = (newLayout: LayoutItem[]) => {
     setLayout(newLayout);
   };
 
-  const handleSave = () => {
+  const handleSaveLayout = () => {
     localStorage.setItem('dashboardLayout', JSON.stringify(layout));
-    localStorage.setItem('dashboardComponents', JSON.stringify(activeComponents));
-    alert('Dashboard-Layout wurde gespeichert!');
+    localStorage.setItem('dashboardWidgets', JSON.stringify(activeWidgets));
   };
 
-  const handleRemoveComponent = (itemId: string) => {
-    const newLayout = layout.filter(item => item.i !== itemId);
-    const componentType = itemId.split('-')[0];
-    const newActiveComponents = activeComponents.filter(type => type !== componentType);
+  const handleResetLayout = () => {
+    localStorage.removeItem('dashboardLayout');
+    localStorage.removeItem('dashboardWidgets');
+    setLayout([]);
+    setActiveWidgets([]);
+  };
 
-    setLayout(newLayout);
-    setActiveComponents(newActiveComponents);
+  const getResponsiveLayout = (breakpoint: string, items: LayoutItem[]) => {
+    return items.map(item => {
+      const widgetConfig = componentMap[item.i.split('-')[0]];
+      let minW = widgetConfig?.minSize?.w || 2;
+      let w = item.w;
 
-    // Optional: Automatisch speichern nach dem Entfernen
-    localStorage.setItem('dashboardLayout', JSON.stringify(newLayout));
-    localStorage.setItem('dashboardComponents', JSON.stringify(newActiveComponents));
+      switch (breakpoint) {
+        case 'md':
+          minW = Math.min(minW, 3);
+          w = Math.min(w, 10);
+          break;
+        case 'sm':
+          minW = Math.min(minW, 2);
+          w = Math.min(w, 6);
+          break;
+        case 'xs':
+          minW = Math.min(minW, 2);
+          w = Math.min(w, 4);
+          break;
+        case 'xxs':
+          minW = Math.min(minW, 1);
+          w = Math.min(w, 2);
+          break;
+      }
+
+      return {
+        ...item,
+        minW,
+        w
+      };
+    });
+  };
+
+  const layouts = {
+    lg: layout,
+    md: getResponsiveLayout('md', layout),
+    sm: getResponsiveLayout('sm', layout),
+    xs: getResponsiveLayout('xs', layout),
+    xxs: getResponsiveLayout('xxs', layout)
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Header
-        onLogout={onLogout}
+    <div className="relative min-h-[calc(100vh-4rem)]">
+      <ResponsiveGridLayout
+        className="layout"
+        layouts={layouts}
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        rowHeight={60}
+        onLayoutChange={handleLayoutChange}
+        isDraggable
+        isResizable
+        margin={[16, 16]}
+        draggableHandle=".drag-handle"
+        containerPadding={[0, 0]}
+        compactType="vertical"
+        preventCollision={false}
+        resizeHandles={['se']}
+      >
+        {layout.map((item) => {
+          const componentType = item.i.split('-')[0];
+          const widgetConfig = componentMap[componentType];
+          const WidgetComponent = widgetConfig?.component;
+
+          return WidgetComponent ? (
+            <div key={item.i} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
+              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
+                <div className="flex items-center gap-2 drag-handle cursor-move flex-1">
+                  <GripVertical className="w-4 h-4 text-gray-400" />
+                  <h3 className="font-medium text-gray-700">{widgetConfig.title}</h3>
+                </div>
+                <button
+                  onClick={() => handleRemoveWidget(item.i)}
+                  className="p-1 hover:bg-gray-200 rounded-md transition-colors ml-2"
+                  title="Widget entfernen"
+                >
+                  <X className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+              <div className="flex-1 overflow-auto">
+                <WidgetComponent />
+              </div>
+            </div>
+          ) : null;
+        })}
+      </ResponsiveGridLayout>
+      
+      <WidgetMenu
         components={availableComponents}
         onComponentSelect={handleComponentSelect}
-        onSave={handleSave}
+        onSaveLayout={handleSaveLayout}
+        onResetLayout={handleResetLayout}
       />
-
-      <main className="p-4">
-        <ResponsiveGridLayout
-          className="layout"
-          layouts={{ lg: layout }}
-          breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-          rowHeight={100}
-          onLayoutChange={handleLayoutChange}
-          isDraggable
-          isResizable
-          margin={[16, 16]}
-          draggableHandle=".drag-handle"
-          containerPadding={[0, 0]}
-        >
-          {layout.map((item) => {
-            const componentType = item.i.split('-')[0];
-            const widgetConfig = componentMap[componentType];
-            const WidgetComponent = widgetConfig?.component;
-
-            return WidgetComponent ? (
-              <div key={item.i} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
-                <div className="bg-gray-50 px-4 py-2 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
-                  <div className="flex items-center gap-2 drag-handle cursor-move flex-1">
-                    <GripVertical className="w-4 h-4 text-gray-400" />
-                    <h3 className="font-medium text-gray-700">{widgetConfig.title}</h3>
-                  </div>
-                  <button
-                    onClick={() => handleRemoveComponent(item.i)}
-                    className="p-1 hover:bg-gray-200 rounded-md transition-colors ml-2"
-                    title="Komponente entfernen"
-                  >
-                    <X className="w-4 h-4 text-gray-500" />
-                  </button>
-                </div>
-                <div className="flex-1 overflow-auto">
-                  <WidgetComponent />
-                </div>
-              </div>
-            ) : null;
-          })}
-        </ResponsiveGridLayout>
-      </main>
     </div>
   );
 }

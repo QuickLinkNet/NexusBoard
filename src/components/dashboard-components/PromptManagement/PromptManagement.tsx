@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, X, Plus, Edit2, Save } from 'lucide-react';
+import { Search, X, Plus, Edit2 } from 'lucide-react';
 import { Overlay } from './Overlay';
 import { PromptStatistics } from './PromptStatistics';
 import { PromptTable } from './PromptTable';
@@ -14,7 +14,7 @@ interface Prompt {
   successful_runs: string;
 }
 
-export function PromptManagement() {
+export function PromptManager() {
   const [showPromptList, setShowPromptList] = useState(true);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showEditOverlay, setShowEditOverlay] = useState(false);
@@ -54,9 +54,16 @@ export function PromptManagement() {
   const savePrompts = async () => {
     try {
       const parsedPrompts = JSON.parse(jsonInput);
+
       for (const prompt of parsedPrompts) {
+        // Konvertiere Keywords-Array zu einem String, falls es ein Array ist
+        if (Array.isArray(prompt.keywords)) {
+          prompt.keywords = prompt.keywords.join(', ');
+        }
+
         await apiService.createPrompt(prompt);
       }
+
       await loadPrompts();
       setShowOverlay(false);
       setJsonInput('');
@@ -68,6 +75,11 @@ export function PromptManagement() {
   const handleEditPrompt = async () => {
     if (editPromptData && editPromptData.title && editPromptData.prompt) {
       try {
+        // Stelle sicher, dass Keywords als String gespeichert werden
+        if (editPromptData.keywords && Array.isArray(editPromptData.keywords)) {
+          editPromptData.keywords = (editPromptData.keywords as unknown as string[]).join(', ');
+        }
+
         await apiService.updatePrompt(editPromptData.id, editPromptData);
         await loadPrompts();
         setShowEditOverlay(false);

@@ -165,7 +165,7 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
           Nur Prompts mit weniger erfolgreichen als erwarteten Ausführungen anzeigen
         </label>
       </div>
-      <div className="max-h-[600px] overflow-y-auto">
+      <div className="overflow-y-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>

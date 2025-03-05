@@ -1,7 +1,7 @@
 import axios from 'axios';
 import dummyData from '../data/prompts.json';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "/api";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 class ApiService {
   private static instance: ApiService;
@@ -94,6 +94,11 @@ class ApiService {
 
   public async createPrompt(promptData: any) {
     try {
+      // Stelle sicher, dass Keywords als String gespeichert werden
+      if (promptData.keywords && Array.isArray(promptData.keywords)) {
+        promptData.keywords = promptData.keywords.join(', ');
+      }
+
       if (this.isBackendAvailable) {
         const response = await axios.post(`${BACKEND_URL}/prompts`, promptData, {
           headers: this.getAuthHeaders()
@@ -102,6 +107,7 @@ class ApiService {
           return response.data.data;
         }
       }
+
       const newPrompt = {
         id: String(dummyData.prompts.length + 1),
         ...promptData,
@@ -118,6 +124,11 @@ class ApiService {
 
   public async updatePrompt(id: string, promptData: any) {
     try {
+      // Stelle sicher, dass Keywords als String gespeichert werden
+      if (promptData.keywords && Array.isArray(promptData.keywords)) {
+        promptData.keywords = promptData.keywords.join(', ');
+      }
+
       if (this.isBackendAvailable) {
         const response = await axios.put(`${BACKEND_URL}/prompts/${id}`, promptData, {
           headers: this.getAuthHeaders()

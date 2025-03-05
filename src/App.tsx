@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Login } from './components/Login';
+import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
+import { PromptManagement } from './components/pages/PromptManagement';
 import { AuthState } from './types/auth';
 import { apiService } from './lib/apiService';
 
@@ -69,14 +72,20 @@ function App() {
     );
   }
 
+  if (!auth.isAuthenticated) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   return (
-    <div>
-      {!auth.isAuthenticated ? (
-        <Login onLogin={handleLogin} />
-      ) : (
-        <Dashboard onLogout={handleLogout} />
-      )}
-    </div>
+    <Router>
+      <Layout onLogout={handleLogout}>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/prompts" element={<PromptManagement />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 }
 
