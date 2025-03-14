@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { apiService } from '../lib/apiService';
+import {useState, useEffect} from 'react';
+import {apiService} from '../lib/apiService';
 
 type ServerStatus = 'online' | 'offline' | 'checking';
 

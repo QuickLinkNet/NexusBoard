@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Search, X, Plus, Edit2 } from 'lucide-react';
-import { Overlay } from './Overlay';
-import { PromptStatistics } from './PromptStatistics';
-import { PromptTable } from './PromptTable';
-import { apiService } from '../../../lib/apiService';
+import React, {useState, useEffect} from 'react';
+import {Search, X, Plus, Edit2} from 'lucide-react';
+import {Overlay} from './Overlay';
+import {PromptStatistics} from './PromptStatistics';
+import {PromptTable} from './PromptTable';
+import {apiService} from '../../../lib/apiService';
 
 interface Prompt {
   id: string;
@@ -128,20 +128,20 @@ export function PromptManager() {
                     placeholder="Suchen..."
                     className="w-full pl-10 pr-4 py-2 border rounded-md"
                   />
-                  <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                  <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400"/>
                 </div>
               </div>
               <button
                 onClick={() => setSearchTerm('')}
                 className="px-4 py-2 border rounded-md hover:bg-gray-50"
               >
-                <X className="h-5 w-5" />
+                <X className="h-5 w-5"/>
               </button>
               <button
                 onClick={() => setShowOverlay(true)}
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
               >
-                <Plus className="h-5 w-5" />
+                <Plus className="h-5 w-5"/>
               </button>
             </div>
           </div>
@@ -161,7 +161,7 @@ export function PromptManager() {
         </div>
       ) : (
         <div className="flex-1 overflow-auto">
-          <PromptStatistics logs={logs} />
+          <PromptStatistics logs={logs}/>
         </div>
       )}
 

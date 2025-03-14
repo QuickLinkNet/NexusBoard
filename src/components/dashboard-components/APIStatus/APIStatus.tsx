@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Activity, CheckCircle, XCircle, AlertCircle, RefreshCw } from 'lucide-react';
-import { apiService } from '../../../lib/apiService';
+import React, {useState, useEffect} from 'react';
+import {Activity, CheckCircle, XCircle, AlertCircle, RefreshCw} from 'lucide-react';
+import {apiService} from '../../../lib/apiService';
 
 interface EndpointStatus {
   name: string;
@@ -128,13 +128,13 @@ export default function APIStatus() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'online':
-        return <CheckCircle className="w-5 h-5 text-green-500" />;
+        return <CheckCircle className="w-5 h-5 text-green-500"/>;
       case 'offline':
-        return <XCircle className="w-5 h-5 text-red-500" />;
+        return <XCircle className="w-5 h-5 text-red-500"/>;
       case 'error':
-        return <AlertCircle className="w-5 h-5 text-yellow-500" />;
+        return <AlertCircle className="w-5 h-5 text-yellow-500"/>;
       default:
-        return <Activity className="w-5 h-5 text-gray-500" />;
+        return <Activity className="w-5 h-5 text-gray-500"/>;
     }
   };
 
@@ -160,7 +160,7 @@ export default function APIStatus() {
           disabled={isChecking}
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-400"
         >
-          <RefreshCw className={`w-4 h-4 ${isChecking ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 ${isChecking ? 'animate-spin' : ''}`}/>
           Aktualisieren
         </button>
       </div>

@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { LogOut, ChevronDown, Plus, Save, Server } from 'lucide-react';
-import { ComponentOption, ComponentCategory } from '../types/components';
-import { apiService } from '../lib/apiService';
+import React, {useState, useRef, useEffect} from 'react';
+import {LogOut, ChevronDown, Plus, Save, Server} from 'lucide-react';
+import {ComponentOption, ComponentCategory} from '../types/components';
+import {apiService} from '../lib/apiService';
 
 interface HeaderProps {
   onLogout: () => void;
@@ -10,7 +10,7 @@ interface HeaderProps {
   onSave: () => void;
 }
 
-export function Header({ onLogout, components, onComponentSelect, onSave }: HeaderProps) {
+export function Header({onLogout, components, onComponentSelect, onSave}: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedComponent, setSelectedComponent] = useState<ComponentOption | null>(null);
   const [serverStatus, setServerStatus] = useState<'online' | 'offline' | 'checking'>('checking');
@@ -85,11 +85,11 @@ export function Header({ onLogout, components, onComponentSelect, onSave }: Head
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-bold text-gray-900">Mein Dashboard</h1>
             <div className="flex items-center space-x-2 px-3 py-1 rounded-md bg-gray-50">
-              <Server className={`w-4 h-4 ${getServerStatusColor()}`} />
+              <Server className={`w-4 h-4 ${getServerStatusColor()}`}/>
               <span className="text-sm text-gray-600">{getServerStatusText()}</span>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div ref={dropdownRef} className="relative flex items-center gap-2">
               <button
@@ -97,7 +97,7 @@ export function Header({ onLogout, components, onComponentSelect, onSave }: Head
                 className="flex items-center space-x-2 bg-gray-100 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
               >
                 <span>{selectedComponent ? selectedComponent.name : 'Komponente wählen'}</span>
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4"/>
               </button>
 
               <button
@@ -109,10 +109,10 @@ export function Header({ onLogout, components, onComponentSelect, onSave }: Head
                     : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4"/>
                 <span>Hinzufügen</span>
               </button>
-              
+
               {isOpen && (
                 <div className="absolute right-0 top-12 w-56 bg-white rounded-md shadow-lg z-10">
                   <div className="py-1">
@@ -145,7 +145,7 @@ export function Header({ onLogout, components, onComponentSelect, onSave }: Head
               onClick={onSave}
               className="flex items-center space-x-2 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors"
             >
-              <Save className="w-4 h-4" />
+              <Save className="w-4 h-4"/>
               <span>Speichern</span>
             </button>
 
@@ -153,7 +153,7 @@ export function Header({ onLogout, components, onComponentSelect, onSave }: Head
               onClick={onLogout}
               className="flex items-center space-x-2 text-gray-600 hover:text-gray-900"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-5 h-5"/>
               <span>Abmelden</span>
             </button>
           </div>

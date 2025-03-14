@@ -1,5 +1,5 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import {X} from 'lucide-react';
 
 interface OverlayProps {
   isOpen: boolean;
@@ -7,7 +7,7 @@ interface OverlayProps {
   children: React.ReactNode;
 }
 
-export function Overlay({ isOpen, onClose, children }: OverlayProps) {
+export function Overlay({isOpen, onClose, children}: OverlayProps) {
   if (!isOpen) return null;
 
   return (
@@ -17,7 +17,7 @@ export function Overlay({ isOpen, onClose, children }: OverlayProps) {
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
         >
-          <X className="h-6 w-6" />
+          <X className="h-6 w-6"/>
         </button>
         {children}
       </div>

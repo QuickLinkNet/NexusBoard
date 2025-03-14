@@ -1,6 +1,15 @@
-import React, { useState } from 'react';
-import { Edit2, ArrowUpDown, Copy, CheckCircle, ChevronLeft, ChevronRight, MoreHorizontal, CheckSquare } from 'lucide-react';
-import { apiService } from '../../../lib/apiService';
+import React, {useState} from 'react';
+import {
+  Edit2,
+  ArrowUpDown,
+  Copy,
+  CheckCircle,
+  ChevronLeft,
+  ChevronRight,
+  MoreHorizontal,
+  CheckSquare
+} from 'lucide-react';
+import {apiService} from '../../../lib/apiService';
 
 interface Prompt {
   id: string;
@@ -23,7 +32,7 @@ type SortDirection = 'asc' | 'desc';
 
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100];
 
-export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableProps) {
+export function PromptTable({prompts, loading, onEdit, onUpdate}: PromptTableProps) {
   const [sortField, setSortField] = useState<SortField>('title');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -107,7 +116,7 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
     const maxVisiblePages = 5;
 
     if (totalPages <= maxVisiblePages) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
+      return Array.from({length: totalPages}, (_, i) => i + 1);
     }
 
     pages.push(1);
@@ -142,13 +151,13 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
     );
   }
 
-  const SortButton = ({ field, label }: { field: SortField; label: string }) => (
+  const SortButton = ({field, label}: { field: SortField; label: string }) => (
     <button
       onClick={() => handleSort(field)}
       className="flex items-center gap-1 hover:text-blue-600 transition-colors"
     >
       {label}
-      <ArrowUpDown className={`h-4 w-4 ${sortField === field ? 'text-blue-600' : 'text-gray-400'}`} />
+      <ArrowUpDown className={`h-4 w-4 ${sortField === field ? 'text-blue-600' : 'text-gray-400'}`}/>
     </button>
   );
 
@@ -170,19 +179,19 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
           <thead className="bg-gray-50 sticky top-0 z-10">
           <tr>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortButton field="title" label="Titel" />
+              <SortButton field="title" label="Titel"/>
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortButton field="prompt" label="Prompt" />
+              <SortButton field="prompt" label="Prompt"/>
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortButton field="keywords" label="Keywords" />
+              <SortButton field="keywords" label="Keywords"/>
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortButton field="expected_runs" label="Erwartete Ausführungen" />
+              <SortButton field="expected_runs" label="Erwartete Ausführungen"/>
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-              <SortButton field="successful_runs" label="Erfolgreiche Ausführungen" />
+              <SortButton field="successful_runs" label="Erfolgreiche Ausführungen"/>
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Aktionen
@@ -217,7 +226,7 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
                     className="text-blue-600 hover:text-blue-900 transition-colors"
                     title="Bearbeiten"
                   >
-                    <Edit2 className="h-5 w-5" />
+                    <Edit2 className="h-5 w-5"/>
                   </button>
                   <button
                     onClick={() => handleCopy(prompt)}
@@ -225,9 +234,9 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
                     title="Prompt kopieren (x10 ar8:3)"
                   >
                     {copiedId === prompt.id ? (
-                      <CheckCircle className="h-5 w-5 text-green-500" />
+                      <CheckCircle className="h-5 w-5 text-green-500"/>
                     ) : (
-                      <Copy className="h-5 w-5" />
+                      <Copy className="h-5 w-5"/>
                     )}
                   </button>
                   {prompt.successful_runs < "10" && (
@@ -238,9 +247,9 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
                       title="Auf 10 erfolgreiche Ausführungen setzen"
                     >
                       {updatingId === prompt.id ? (
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600" />
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"/>
                       ) : (
-                        <CheckSquare className="h-5 w-5" />
+                        <CheckSquare className="h-5 w-5"/>
                       )}
                     </button>
                   )}
@@ -276,13 +285,13 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
             disabled={currentPage === 1}
             className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-5 w-5"/>
           </button>
 
           {getPageNumbers().map((page, index) => (
             page === '...' ? (
               <span key={`ellipsis-${index}`} className="px-3 py-1">
-                <MoreHorizontal className="h-5 w-5 text-gray-400" />
+                <MoreHorizontal className="h-5 w-5 text-gray-400"/>
               </span>
             ) : (
               <button
@@ -304,7 +313,7 @@ export function PromptTable({ prompts, loading, onEdit, onUpdate }: PromptTableP
             disabled={currentPage === totalPages}
             className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-5 w-5"/>
           </button>
         </div>
       </div>

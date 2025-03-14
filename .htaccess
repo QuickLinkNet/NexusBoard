@@ -7,8 +7,3 @@ RewriteRule . /apps/nexusboard/index.html [L]
 
 # Prevent directory listing
 Options -Indexes
-
-# Properly handle asset files
-<FilesMatch "\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
-    Header set Cache-Control "max-age=31536000, public"
-</FilesMatch>

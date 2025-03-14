@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import { GripVertical, X } from 'lucide-react';
-import { WidgetMenu } from './WidgetMenu';
-import { ComponentOption, ComponentCategory } from '../types/components';
+import React, {useState, useEffect} from 'react';
+import {Responsive, WidthProvider} from 'react-grid-layout';
+import {GripVertical, X} from 'lucide-react';
+import {WidgetMenu} from './WidgetMenu';
+import {ComponentOption, ComponentCategory} from '../types/components';
 import APIStatus from './dashboard-components/APIStatus/APIStatus';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -29,8 +29,8 @@ const componentMap: Record<string, WidgetConfig> = {
   apiStatus: {
     id: 'apiStatus',
     component: APIStatus,
-    defaultSize: { w: 6, h: 4 },
-    minSize: { w: 2, h: 2 },
+    defaultSize: {w: 6, h: 4},
+    minSize: {w: 2, h: 2},
     title: 'API Status'
   }
 };
@@ -96,7 +96,7 @@ export function Dashboard() {
     const newLayout = layout.filter(item => item.i !== itemId);
     const componentType = itemId.split('-')[0];
     const newActiveWidgets = activeWidgets.filter(type => type !== componentType);
-    
+
     setLayout(newLayout);
     setActiveWidgets(newActiveWidgets);
   };
@@ -163,8 +163,8 @@ export function Dashboard() {
       <ResponsiveGridLayout
         className="layout"
         layouts={layouts}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
         rowHeight={60}
         onLayoutChange={handleLayoutChange}
         isDraggable
@@ -183,9 +183,10 @@ export function Dashboard() {
 
           return WidgetComponent ? (
             <div key={item.i} className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-full">
-              <div className="bg-gray-50 px-4 py-2 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
+              <div
+                className="bg-gray-50 px-4 py-2 flex items-center justify-between border-b border-gray-200 flex-shrink-0">
                 <div className="flex items-center gap-2 drag-handle cursor-move flex-1">
-                  <GripVertical className="w-4 h-4 text-gray-400" />
+                  <GripVertical className="w-4 h-4 text-gray-400"/>
                   <h3 className="font-medium text-gray-700">{widgetConfig.title}</h3>
                 </div>
                 <button
@@ -193,17 +194,17 @@ export function Dashboard() {
                   className="p-1 hover:bg-gray-200 rounded-md transition-colors ml-2"
                   title="Widget entfernen"
                 >
-                  <X className="w-4 h-4 text-gray-500" />
+                  <X className="w-4 h-4 text-gray-500"/>
                 </button>
               </div>
               <div className="flex-1 overflow-auto">
-                <WidgetComponent />
+                <WidgetComponent/>
               </div>
             </div>
           ) : null;
         })}
       </ResponsiveGridLayout>
-      
+
       <WidgetMenu
         components={availableComponents}
         onComponentSelect={handleComponentSelect}

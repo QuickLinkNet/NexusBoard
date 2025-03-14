@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Plus, Save, RotateCcw } from 'lucide-react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
-import { ComponentOption, ComponentCategory } from '../types/components';
+import React, {useState} from 'react';
+import {Plus, Save, RotateCcw} from 'lucide-react';
+import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from './ui/sheet';
+import {ComponentOption, ComponentCategory} from '../types/components';
 
 interface WidgetMenuProps {
   components: ComponentCategory[];
@@ -10,14 +10,15 @@ interface WidgetMenuProps {
   onResetLayout: () => void;
 }
 
-export function WidgetMenu({ components, onComponentSelect, onSaveLayout, onResetLayout }: WidgetMenuProps) {
+export function WidgetMenu({components, onComponentSelect, onSaveLayout, onResetLayout}: WidgetMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <button className="fixed right-6 bottom-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center group">
-          <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-200" />
+        <button
+          className="fixed right-6 bottom-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors flex items-center justify-center group">
+          <Plus className="w-6 h-6 group-hover:rotate-90 transition-transform duration-200"/>
           <span className="sr-only">Menü öffnen</span>
         </button>
       </SheetTrigger>
@@ -36,7 +37,7 @@ export function WidgetMenu({ components, onComponentSelect, onSaveLayout, onRese
                 }}
                 className="w-full flex items-center gap-2 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
               >
-                <Save className="w-5 h-5 text-blue-600" />
+                <Save className="w-5 h-5 text-blue-600"/>
                 <div className="text-left">
                   <div className="font-medium text-blue-900">Layout speichern</div>
                   <div className="text-sm text-blue-700">Aktuelle Widget-Anordnung sichern</div>
@@ -49,7 +50,7 @@ export function WidgetMenu({ components, onComponentSelect, onSaveLayout, onRese
                 }}
                 className="w-full flex items-center gap-2 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <RotateCcw className="w-5 h-5 text-gray-600" />
+                <RotateCcw className="w-5 h-5 text-gray-600"/>
                 <div className="text-left">
                   <div className="font-medium text-gray-900">Layout zurücksetzen</div>
                   <div className="text-sm text-gray-700">Alle Widgets entfernen</div>

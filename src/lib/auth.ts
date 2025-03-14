@@ -1,4 +1,4 @@
-import { apiService } from './apiService';
+import {apiService} from './apiService';
 
 export interface User {
   id: number;
@@ -16,7 +16,7 @@ export async function login(username: string, password: string): Promise<{ user:
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ username, password })
+      body: JSON.stringify({username, password})
     });
 
     if (!response.ok) {
@@ -24,7 +24,7 @@ export async function login(username: string, password: string): Promise<{ user:
     }
 
     const data = await response.json();
-    
+
     if (data.success && data.data) {
       localStorage.setItem('token', data.data.token);
       return {

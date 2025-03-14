@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { Login } from './components/Login';
-import { Layout } from './components/Layout';
-import { Dashboard } from './components/Dashboard';
-import { PromptManagement } from './components/pages/PromptManagement';
-import { AuthState } from './types/auth';
-import { apiService } from './lib/apiService';
+import React, {useState, useEffect} from 'react';
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import {LoginPage} from './pages/Auth/LoginPage';
+import {DashboardLayout} from './templates/DashboardLayout/DashboardLayout';
+import {DashboardPage} from './pages/Dashboard/DashboardPage';
+import {PromptsPage} from './pages/Prompts/PromptsPage';
+import {AuthState} from './utils/types/auth';
+import {apiService} from './services/api/apiService';
 
 function App() {
   const [auth, setAuth] = useState<AuthState>({
@@ -73,18 +73,18 @@ function App() {
   }
 
   if (!auth.isAuthenticated) {
-    return <Login onLogin={handleLogin} />;
+    return <LoginPage onLogin={handleLogin}/>;
   }
 
   return (
-    <Router>
-      <Layout onLogout={handleLogout}>
+    <Router basename="/apps/nexusboard">
+      <DashboardLayout onLogout={handleLogout}>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/prompts" element={<PromptManagement />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/" element={<DashboardPage/>}/>
+          <Route path="/prompts" element={<PromptsPage/>}/>
+          <Route path="*" element={<Navigate to="/" replace/>}/>
         </Routes>
-      </Layout>
+      </DashboardLayout>
     </Router>
   );
 }

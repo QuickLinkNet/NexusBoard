@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { LogOut, Server, Wand2, Menu, X } from 'lucide-react';
-import { useServerStatus } from '../hooks/useServerStatus';
+import React, {useState} from 'react';
+import {Link, useLocation} from 'react-router-dom';
+import {LogOut, Server, Wand2, Menu, X} from 'lucide-react';
+import {useServerStatus} from '../hooks/useServerStatus';
 
 interface LayoutProps {
   children: React.ReactNode;
   onLogout: () => void;
 }
 
-export function Layout({ children, onLogout }: LayoutProps) {
+export function Layout({children, onLogout}: LayoutProps) {
   const location = useLocation();
-  const { status, statusText } = useServerStatus();
+  const {status, statusText} = useServerStatus();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const getStatusColor = () => {
@@ -39,7 +39,7 @@ export function Layout({ children, onLogout }: LayoutProps) {
             : 'text-gray-600 hover:bg-gray-100'
         }`}
       >
-        <Wand2 className="w-5 h-5" />
+        <Wand2 className="w-5 h-5"/>
         <span>Prompts</span>
       </Link>
 
@@ -50,7 +50,7 @@ export function Layout({ children, onLogout }: LayoutProps) {
         }}
         className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 px-4 py-2"
       >
-        <LogOut className="w-5 h-5" />
+        <LogOut className="w-5 h-5"/>
         <span>Abmelden</span>
       </button>
     </>
@@ -67,14 +67,14 @@ export function Layout({ children, onLogout }: LayoutProps) {
               </Link>
 
               <div className="hidden md:flex items-center space-x-2 px-3 py-1 rounded-md bg-gray-50">
-                <Server className={`w-4 h-4 ${getStatusColor()}`} />
+                <Server className={`w-4 h-4 ${getStatusColor()}`}/>
                 <span className="text-sm text-gray-600">{statusText}</span>
               </div>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-4">
-              <NavLinks />
+              <NavLinks/>
             </div>
 
             {/* Mobile Menu Button */}
@@ -83,9 +83,9 @@ export function Layout({ children, onLogout }: LayoutProps) {
               className="md:hidden p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100"
             >
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6" />
+                <X className="w-6 h-6"/>
               ) : (
-                <Menu className="w-6 h-6" />
+                <Menu className="w-6 h-6"/>
               )}
             </button>
           </div>
@@ -96,10 +96,10 @@ export function Layout({ children, onLogout }: LayoutProps) {
           <div className="md:hidden border-t border-gray-200">
             <div className="px-4 py-2 space-y-2">
               <div className="flex items-center space-x-2 px-3 py-2 rounded-md bg-gray-50 mb-4">
-                <Server className={`w-4 h-4 ${getStatusColor()}`} />
+                <Server className={`w-4 h-4 ${getStatusColor()}`}/>
                 <span className="text-sm text-gray-600">{statusText}</span>
               </div>
-              <NavLinks />
+              <NavLinks/>
             </div>
           </div>
         )}

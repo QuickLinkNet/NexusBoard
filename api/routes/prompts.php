@@ -2,34 +2,10 @@
 function handlePromptRoutes($endpoint) {
     $promptModel = new Prompt();
 
-    // Prüfe zuerst auf den increment-success Endpunkt
-    if (preg_match('/^prompts\/(\d+)\/increment-success$/', $endpoint, $matches)) {
-        if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
-            $id = $matches[1];
-            try {
-                $prompt = $promptModel->incrementSuccessfulRuns($id);
-                if ($prompt) {
-                    echo json_encode(['success' => true, 'data' => $prompt]);
-                } else {
-                    http_response_code(404);
-                    echo json_encode(['success' => false, 'message' => 'Prompt nicht gefunden']);
-                }
-            } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-            }
-            exit;
-        }
-
-        http_response_code(405);
-        echo json_encode(['success' => false, 'message' => 'Methode nicht erlaubt']);
-        exit;
-    }
-
-    // Check for secret parameter
+    // Check for secret parameter first
     $data = json_decode(file_get_contents('php://input'), true);
     $secret = isset($_GET['secret']) ? $_GET['secret'] : (isset($data['secret']) ? $data['secret'] : null);
-
+    
     $requireAuth = $secret !== 'brot';
 
     // Only require authentication if secret is not valid
@@ -66,8 +42,43 @@ function handlePromptRoutes($endpoint) {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $limit = isset($_GET['limit']) ? intval($_GET['limit']) : null;
             $prompts = $promptModel->getPending($limit);
-            // Direkte Rückgabe der Prompts ohne zusätzliche Wrapper
-            echo json_encode($prompts);
+            echo json_encode(['success' => true, 'data' => ['prompts' => $prompts]]);
+            exit;
+        }
+        
+        http_response_code(405);
+        echo json_encode(['success' => false, 'message' => 'Methode nicht erlaubt']);
+        exit;
+    }
+
+    // Neue Route für increment-success
+    if (preg_match('/^prompts\/(\d+)\/increment-success$/', $endpoint, $matches)) {
+        $promptId = $matches[1];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            try {
+                $prompt = $promptModel->getById($promptId);
+                if (!$prompt) {
+                    http_response_code(404);
+                    echo json_encode(['success' => false, 'message' => 'Prompt nicht gefunden']);
+                    exit;
+                }
+
+                $currentSuccessful = intval($prompt['successful_runs']);
+                $updatedPrompt = $promptModel->update($promptId, [
+                    'successful_runs' => (string)($currentSuccessful + 1)
+                ]);
+
+                if ($updatedPrompt) {
+                    echo json_encode(['success' => true, 'data' => $updatedPrompt]);
+                } else {
+                    http_response_code(500);
+                    echo json_encode(['success' => false, 'message' => 'Fehler beim Aktualisieren des Prompts']);
+                }
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => 'Interner Serverfehler: ' . $e->getMessage()]);
+            }
             exit;
         }
 
@@ -84,7 +95,7 @@ function handlePromptRoutes($endpoint) {
         }
 
         $id = substr($endpoint, 8);
-
+        
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'PUT':
                 $data = json_decode(file_get_contents('php://input'), true);

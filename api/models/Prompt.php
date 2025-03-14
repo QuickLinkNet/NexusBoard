@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../config/Database.php';
+
 class Prompt {
     private $conn;
 
@@ -16,7 +18,7 @@ class Prompt {
         if ($limit !== null && $limit > 0) {
             $sql .= " LIMIT " . intval($limit);
         }
-
+        
         $stmt = $this->conn->query($sql);
         return $stmt->fetchAll();
     }
@@ -26,7 +28,7 @@ class Prompt {
             INSERT INTO prompts (title, prompt, keywords, expected_runs, successful_runs)
             VALUES (?, ?, ?, ?, ?)
         ");
-
+        
         $stmt->execute([
             $data['title'],
             $data['prompt'],
@@ -55,21 +57,10 @@ class Prompt {
 
         $params[] = $id;
         $sql = "UPDATE prompts SET " . implode(', ', $updateFields) . " WHERE id = ?";
-
+        
         $stmt = $this->conn->prepare($sql);
         $stmt->execute($params);
 
-        return $this->getById($id);
-    }
-
-    public function incrementSuccessfulRuns($id) {
-        $stmt = $this->conn->prepare("
-            UPDATE prompts
-            SET successful_runs = CAST(successful_runs AS SIGNED) + 1
-            WHERE id = ?
-        ");
-
-        $stmt->execute([$id]);
         return $this->getById($id);
     }
 

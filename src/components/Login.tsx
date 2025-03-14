@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { LogIn, AlertCircle, Server } from 'lucide-react';
-import { login } from '../lib/auth';
-import { apiService } from '../lib/apiService';
+import React, {useState, useEffect} from 'react';
+import {LogIn, AlertCircle, Server} from 'lucide-react';
+import {login} from '../lib/auth';
+import {apiService} from '../lib/apiService';
 
 interface LoginProps {
   onLogin: (user: any) => void;
 }
 
-export function Login({ onLogin }: LoginProps) {
+export function Login({onLogin}: LoginProps) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -74,18 +74,18 @@ export function Login({ onLogin }: LoginProps) {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <div className="flex items-center justify-center mb-6">
-          <LogIn className="w-12 h-12 text-blue-600" />
+          <LogIn className="w-12 h-12 text-blue-600"/>
         </div>
         <h1 className="text-2xl font-bold text-center mb-6">Dashboard Anmeldung</h1>
 
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Server className={`w-5 h-5 ${getServerStatusColor()}`} />
+          <Server className={`w-5 h-5 ${getServerStatusColor()}`}/>
           <span className="text-sm text-gray-600">{getServerStatusText()}</span>
         </div>
 
         {error && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-center gap-2 text-red-600">
-            <AlertCircle className="w-5 h-5" />
+            <AlertCircle className="w-5 h-5"/>
             <span className="text-sm">{error}</span>
           </div>
         )}

@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { FileDown, FolderOpen, RefreshCw } from 'lucide-react';
-import { apiService } from '../../../lib/apiService';
+import React, {useState, useRef} from 'react';
+import {FileDown, FolderOpen, RefreshCw} from 'lucide-react';
+import {apiService} from '../../../lib/apiService';
 
 interface GenerateResponse {
   message: string;
@@ -128,8 +128,8 @@ export function MetadataManagement() {
       const jsonContent = JSON.stringify(metadata, null, 2);
 
       // Erstelle Download-Links
-      const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const jsonBlob = new Blob([jsonContent], { type: 'application/json' });
+      const csvBlob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
+      const jsonBlob = new Blob([jsonContent], {type: 'application/json'});
 
       const csvUrl = URL.createObjectURL(csvBlob);
       const jsonUrl = URL.createObjectURL(jsonBlob);
@@ -187,7 +187,7 @@ export function MetadataManagement() {
               onClick={triggerFileInput}
               className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 cursor-pointer"
             >
-              <FolderOpen className="w-4 h-4" />
+              <FolderOpen className="w-4 h-4"/>
               <span>Bilder auswählen</span>
             </button>
 
@@ -230,7 +230,7 @@ export function MetadataManagement() {
           >
             {isGenerating ? (
               <>
-                <RefreshCw className="w-4 h-4 animate-spin" />
+                <RefreshCw className="w-4 h-4 animate-spin"/>
                 Generiere...
               </>
             ) : (
@@ -261,7 +261,7 @@ export function MetadataManagement() {
                   download="metadata.csv"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
                 >
-                  <FileDown className="w-4 h-4" />
+                  <FileDown className="w-4 h-4"/>
                   CSV herunterladen
                 </a>
                 <a
@@ -269,7 +269,7 @@ export function MetadataManagement() {
                   download="metadata.json"
                   className="flex items-center gap-2 text-blue-600 hover:text-blue-800"
                 >
-                  <FileDown className="w-4 h-4" />
+                  <FileDown className="w-4 h-4"/>
                   JSON herunterladen
                 </a>
               </div>

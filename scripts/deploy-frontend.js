@@ -1,9 +1,9 @@
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import {fileURLToPath} from 'url';
+import {dirname, join} from 'path';
 import * as ftp from 'basic-ftp';
-import { config } from 'dotenv';
-import { execSync } from 'child_process';
-import { copyFileSync } from 'fs';
+import {config} from 'dotenv';
+import {execSync} from 'child_process';
+import {copyFileSync} from 'fs';
 
 // Lade Umgebungsvariablen
 config();
@@ -24,7 +24,7 @@ async function deployFrontend() {
 
         // 1. Build erstellen
         console.log('📦 Erstelle Production Build...');
-        execSync('npm run build', { stdio: 'inherit' });
+        execSync('npm run build', {stdio: 'inherit'});
 
         // 2. Kopiere .htaccess in den dist Ordner
         console.log('\n📄 Kopiere Frontend .htaccess in den Build-Ordner...');

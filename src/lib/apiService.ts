@@ -9,7 +9,8 @@ class ApiService {
   private hasCheckedBackend: boolean = false;
   private checkingBackend: Promise<void> | null = null;
 
-  private constructor() {}
+  private constructor() {
+  }
 
   public static getInstance(): ApiService {
     if (!ApiService.instance) {
@@ -43,7 +44,7 @@ class ApiService {
   private getAuthHeaders() {
     const token = localStorage.getItem('token');
     return {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token ? {Authorization: `Bearer ${token}`} : {}),
       'Content-Type': 'application/json'
     };
   }
@@ -60,10 +61,10 @@ class ApiService {
           return response.data.data;
         }
       }
-      return { prompts: dummyData.prompts, total: dummyData.prompts.length };
+      return {prompts: dummyData.prompts, total: dummyData.prompts.length};
     } catch (error) {
       console.error('Error fetching prompts:', error);
-      return { prompts: dummyData.prompts, total: dummyData.prompts.length };
+      return {prompts: dummyData.prompts, total: dummyData.prompts.length};
     }
   }
 
@@ -75,8 +76,8 @@ class ApiService {
 
       const response = await axios.post(
         `${BACKEND_URL}/meta/generate`,
-        { imagesPath, outputPath },
-        { headers: this.getAuthHeaders() }
+        {imagesPath, outputPath},
+        {headers: this.getAuthHeaders()}
       );
 
       if (response.data?.success) {

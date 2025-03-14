@@ -5,11 +5,8 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-  exit(0);
+    exit(0);
 }
-
-//ini_set('display_errors', '1');
-//error_reporting(E_ALL);
 
 require_once __DIR__ . '/models/User.php';
 require_once __DIR__ . '/models/Prompt.php';
@@ -30,15 +27,15 @@ error_log("Requested endpoint: " . $endpoint);
 
 // Versuche die Route zu den verschiedenen Handlern weiterzuleiten
 if (handleHealthRoute($endpoint)) {
-  exit;
+    exit;
 }
 
 if (handleAuthRoutes($endpoint)) {
-  exit;
+    exit;
 }
 
 if (handlePromptRoutes($endpoint)) {
-  exit;
+    exit;
 }
 
 // Wenn keine Route gefunden wurde
