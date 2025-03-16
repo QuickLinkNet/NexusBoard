@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
-import {Responsive, WidthProvider} from 'react-grid-layout';
-import {GripVertical, X} from 'lucide-react';
-import {Card} from '../../molecules/Card/Card';
-import {Button} from '../../atoms/Button/Button';
-import {WidgetMenu} from './components/WidgetMenu';
-import {ComponentOption} from '../../utils/types/components';
+import React, { useState, useEffect } from 'react';
+import { Responsive, WidthProvider } from 'react-grid-layout';
+import { GripVertical, X } from 'lucide-react';
+import { Card } from '../../molecules/Card/Card';
+import { Button } from '../../atoms/Button/Button';
+import { WidgetMenu } from './components/WidgetMenu';
+import { ComponentOption } from '../../utils/types/components';
 import APIStatus from './components/APIStatus';
 import PendingPrompts from './components/PendingPrompts';
 
@@ -32,15 +32,15 @@ const componentMap: Record<string, WidgetConfig> = {
   apiStatus: {
     id: 'apiStatus',
     component: APIStatus,
-    defaultSize: {w: 6, h: 4},
-    minSize: {w: 2, h: 2},
+    defaultSize: { w: 6, h: 4 },
+    minSize: { w: 2, h: 2 },
     title: 'API Status'
   },
   pendingPrompts: {
     id: 'pendingPrompts',
     component: PendingPrompts,
-    defaultSize: {w: 6, h: 4},
-    minSize: {w: 2, h: 2},
+    defaultSize: { w: 6, h: 4 },
+    minSize: { w: 2, h: 2 },
     title: 'Ausstehende Prompts'
   }
 };
@@ -104,15 +104,15 @@ export function DashboardPage() {
     <div className="relative min-h-[calc(100vh-4rem)]">
       <ResponsiveGridLayout
         className="layout"
-        layouts={{lg: layout}}
-        breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
+        layouts={{ lg: layout }}
+        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
         rowHeight={60}
         onLayoutChange={handleLayoutChange}
         isDraggable
         isResizable
         margin={[16, 16]}
-        draggableHandle=".drag-handle"
+        draggableHandle=".widget-drag-handle"
         useCSSTransforms={true}
       >
         {layout.map((item) => {
@@ -122,23 +122,25 @@ export function DashboardPage() {
 
           return WidgetComponent ? (
             <div key={item.i} className="h-full">
-              <Card className="h-full flex flex-col">
-                <div className="bg-gray-50 px-4 py-2 flex items-center justify-between border-b">
-                  <div className="flex items-center gap-2 drag-handle cursor-move">
-                    <GripVertical className="w-4 h-4 text-gray-400"/>
-                    <h3 className="font-medium text-gray-700">{widgetConfig.title}</h3>
+              <div className="widget">
+                <div className="widget-header">
+                  <div className="widget-title">
+                    <div className="widget-drag-handle">
+                      <GripVertical className="w-4 h-4 text-gray-400" />
+                    </div>
+                    <span>{widgetConfig.title}</span>
                   </div>
-                  <Button
-                    variant="secondary"
-                    size="sm"
+                  <button
                     onClick={() => handleRemoveWidget(item.i)}
-                    icon={<X className="w-4 h-4"/>}
-                  />
+                    className="widget-close"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
-                <div className="flex-1 overflow-auto p-4">
-                  <WidgetComponent/>
+                <div className="widget-content">
+                  <WidgetComponent />
                 </div>
-              </Card>
+              </div>
             </div>
           ) : null;
         })}
