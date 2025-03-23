@@ -19,20 +19,20 @@ export default {
             },
             keyframes: {
                 "fade-in": {
-                    "0%": { opacity: 0 },
-                    "100%": { opacity: 1 }
+                    "0%": {opacity: 0},
+                    "100%": {opacity: 1}
                 },
                 "fade-out": {
-                    "0%": { opacity: 1 },
-                    "100%": { opacity: 0 }
+                    "0%": {opacity: 1},
+                    "100%": {opacity: 0}
                 },
                 "slide-in-from-right": {
-                    "0%": { transform: "translateX(100%)" },
-                    "100%": { transform: "translateX(0)" }
+                    "0%": {transform: "translateX(100%)"},
+                    "100%": {transform: "translateX(0)"}
                 },
                 "slide-out-to-right": {
-                    "0%": { transform: "translateX(0)" },
-                    "100%": { transform: "translateX(100%)" }
+                    "0%": {transform: "translateX(0)"},
+                    "100%": {transform: "translateX(100%)"}
                 }
             },
             animation: {

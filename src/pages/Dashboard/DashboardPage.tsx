@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Responsive, WidthProvider } from 'react-grid-layout';
-import { GripVertical, X } from 'lucide-react';
-import { Card } from '../../molecules/Card/Card';
-import { Button } from '../../atoms/Button/Button';
-import { WidgetMenu } from './components/WidgetMenu';
-import { ComponentOption } from '../../utils/types/components';
+import React, {useState, useEffect} from 'react';
+import {Responsive, WidthProvider} from 'react-grid-layout';
+import {GripVertical, X} from 'lucide-react';
+import {Card} from '../../molecules/Card/Card';
+import {Button} from '../../atoms/Button/Button';
+import {WidgetMenu} from './components/WidgetMenu';
+import {ComponentOption} from '../../utils/types/components';
 import APIStatus from './components/APIStatus';
 import PendingPrompts from './components/PendingPrompts';
 
@@ -32,15 +32,15 @@ const componentMap: Record<string, WidgetConfig> = {
   apiStatus: {
     id: 'apiStatus',
     component: APIStatus,
-    defaultSize: { w: 6, h: 4 },
-    minSize: { w: 2, h: 2 },
+    defaultSize: {w: 6, h: 4},
+    minSize: {w: 2, h: 2},
     title: 'API Status'
   },
   pendingPrompts: {
     id: 'pendingPrompts',
     component: PendingPrompts,
-    defaultSize: { w: 6, h: 4 },
-    minSize: { w: 2, h: 2 },
+    defaultSize: {w: 6, h: 4},
+    minSize: {w: 2, h: 2},
     title: 'Ausstehende Prompts'
   }
 };
@@ -104,9 +104,9 @@ export function DashboardPage() {
     <div className="relative min-h-[calc(100vh-4rem)]">
       <ResponsiveGridLayout
         className="layout"
-        layouts={{ lg: layout }}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+        layouts={{lg: layout}}
+        breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
         rowHeight={60}
         onLayoutChange={handleLayoutChange}
         isDraggable
@@ -126,7 +126,7 @@ export function DashboardPage() {
                 <div className="widget-header">
                   <div className="widget-title">
                     <div className="widget-drag-handle">
-                      <GripVertical className="w-4 h-4 text-gray-400" />
+                      <GripVertical className="w-4 h-4 text-gray-400"/>
                     </div>
                     <span>{widgetConfig.title}</span>
                   </div>
@@ -134,11 +134,11 @@ export function DashboardPage() {
                     onClick={() => handleRemoveWidget(item.i)}
                     className="widget-close"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-4 h-4"/>
                   </button>
                 </div>
                 <div className="widget-content">
-                  <WidgetComponent />
+                  <WidgetComponent/>
                 </div>
               </div>
             </div>

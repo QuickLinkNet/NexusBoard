@@ -230,8 +230,8 @@ class DatabaseManager {
       const values = Object.values(data);
 
       const sql = `
-        INSERT INTO ${table} (${columns.join(', ')})
-        VALUES (${placeholders.join(', ')})
+          INSERT INTO ${table} (${columns.join(', ')})
+          VALUES (${placeholders.join(', ')})
       `;
 
       console.log('Executing insert:', sql, 'with values:', values);
@@ -269,9 +269,9 @@ class DatabaseManager {
       const values = [...Object.values(data), id];
 
       const sql = `
-        UPDATE ${table}
-        SET ${setClause}
-        WHERE id = $${values.length}
+          UPDATE ${table}
+          SET ${setClause}
+          WHERE id = $${values.length}
       `;
 
       console.log('Executing update:', sql, 'with values:', values);
@@ -301,7 +301,9 @@ class DatabaseManager {
     }
 
     try {
-      this.db.run(`DELETE FROM ${table} WHERE id = ?`, [id]);
+      this.db.run(`DELETE
+                   FROM ${table}
+                   WHERE id = ?`, [id]);
       this.saveToLocalStorage();
       return true;
     } catch (err) {

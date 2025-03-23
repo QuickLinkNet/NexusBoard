@@ -51,7 +51,6 @@ class DatabaseManager {
             locateFile: file => `https://sql.js.org/dist/${file}`
           });
 
-          // Versuche die Datenbank aus dem localStorage zu laden
           const savedDb = localStorage.getItem('dashboardDb');
           if (savedDb) {
             try {
@@ -94,40 +93,99 @@ class DatabaseManager {
     try {
       console.log('Initializing database tables...');
 
-      // Create users table first
       this.executeSQL(`
-        CREATE TABLE IF NOT EXISTS users (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          username TEXT UNIQUE NOT NULL,
-          email TEXT UNIQUE NOT NULL,
-          password TEXT NOT NULL,
-          role TEXT NOT NULL DEFAULT 'user',
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
+          CREATE TABLE IF NOT EXISTS users
+          (
+              id
+              INTEGER
+              PRIMARY
+              KEY
+              AUTOINCREMENT,
+              username
+              TEXT
+              UNIQUE
+              NOT
+              NULL,
+              email
+              TEXT
+              UNIQUE
+              NOT
+              NULL,
+              password
+              TEXT
+              NOT
+              NULL,
+              role
+              TEXT
+              NOT
+              NULL
+              DEFAULT
+              'user',
+              created_at
+              TIMESTAMP
+              DEFAULT
+              CURRENT_TIMESTAMP,
+              updated_at
+              TIMESTAMP
+              DEFAULT
+              CURRENT_TIMESTAMP
+          )
       `);
 
-      // Create prompts table
       this.executeSQL(`
-        CREATE TABLE IF NOT EXISTS prompts (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          title TEXT NOT NULL,
-          prompt TEXT NOT NULL,
-          keywords TEXT,
-          expected_runs INTEGER DEFAULT 0,
-          successful_runs INTEGER DEFAULT 0,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
+          CREATE TABLE IF NOT EXISTS prompts
+          (
+              id
+              INTEGER
+              PRIMARY
+              KEY
+              AUTOINCREMENT,
+              title
+              TEXT
+              NOT
+              NULL,
+              prompt
+              TEXT
+              NOT
+              NULL,
+              keywords
+              TEXT,
+              expected_runs
+              INTEGER
+              DEFAULT
+              0,
+              successful_runs
+              INTEGER
+              DEFAULT
+              0,
+              created_at
+              TIMESTAMP
+              DEFAULT
+              CURRENT_TIMESTAMP
+          )
       `);
 
-      // Create layouts table
       this.executeSQL(`
-        CREATE TABLE IF NOT EXISTS layouts (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          layout TEXT NOT NULL,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
+          CREATE TABLE IF NOT EXISTS layouts
+          (
+              id
+              INTEGER
+              PRIMARY
+              KEY
+              AUTOINCREMENT,
+              layout
+              TEXT
+              NOT
+              NULL,
+              created_at
+              TIMESTAMP
+              DEFAULT
+              CURRENT_TIMESTAMP,
+              updated_at
+              TIMESTAMP
+              DEFAULT
+              CURRENT_TIMESTAMP
+          )
       `);
 
       console.log('Tables initialized successfully');
@@ -184,7 +242,8 @@ class DatabaseManager {
         return [];
       }
 
-      sql = `SELECT ${options.select || '*'} FROM ${table}`;
+      sql = `SELECT ${options.select || '*'}
+             FROM ${table}`;
 
       if (options.eq) {
         const conditions = Object.entries(options.eq)
@@ -230,15 +289,17 @@ class DatabaseManager {
       const values = Object.values(data);
 
       const sql = `
-        INSERT INTO ${table} (${columns.join(', ')})
-        VALUES (${placeholders.join(', ')})
+          INSERT INTO ${table} (${columns.join(', ')})
+          VALUES (${placeholders.join(', ')})
       `;
 
       console.log('Executing insert:', sql, 'with values:', values);
       this.db.run(sql, values);
 
       const lastId = this.db.exec('SELECT last_insert_rowid()')[0].values[0][0];
-      const result = this.db.exec(`SELECT * FROM ${table} WHERE id = ${lastId}`)[0];
+      const result = this.db.exec(`SELECT *
+                                   FROM ${table}
+                                   WHERE id = ${lastId}`)[0];
 
       this.saveToLocalStorage();
 
@@ -269,15 +330,17 @@ class DatabaseManager {
       const values = [...Object.values(data), id];
 
       const sql = `
-        UPDATE ${table}
-        SET ${setClause}
-        WHERE id = $${values.length}
+          UPDATE ${table}
+          SET ${setClause}
+          WHERE id = $${values.length}
       `;
 
       console.log('Executing update:', sql, 'with values:', values);
       this.db.run(sql, values);
 
-      const result = this.db.exec(`SELECT * FROM ${table} WHERE id = ${id}`)[0];
+      const result = this.db.exec(`SELECT *
+                                   FROM ${table}
+                                   WHERE id = ${id}`)[0];
 
       this.saveToLocalStorage();
 
@@ -301,7 +364,9 @@ class DatabaseManager {
     }
 
     try {
-      this.db.run(`DELETE FROM ${table} WHERE id = ?`, [id]);
+      this.db.run(`DELETE
+                   FROM ${table}
+                   WHERE id = ?`, [id]);
       this.saveToLocalStorage();
       return true;
     } catch (err) {

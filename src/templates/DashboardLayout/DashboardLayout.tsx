@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import {Link, useLocation} from 'react-router-dom';
 import {
   LayoutDashboard,
   Wand2,
@@ -11,7 +11,8 @@ import {
   Calendar,
   FileText,
   Users,
-  BarChart
+  BarChart,
+  FolderOpen
 } from 'lucide-react';
 
 interface DashboardLayoutProps {
@@ -19,18 +20,19 @@ interface DashboardLayoutProps {
   onLogout: () => void;
 }
 
-export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
+export function DashboardLayout({children, onLogout}: DashboardLayoutProps) {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
 
-  const SidebarItem = ({ to, icon: Icon, title }: { to: string; icon: React.ElementType; title: string }) => (
+  const SidebarItem = ({to, icon: Icon, title}: { to: string; icon: React.ElementType; title: string }) => (
     <Link
       to={to}
       className={`sidebar-item group relative ${isActive(to) ? 'active' : ''}`}
       title={title}
     >
-      <Icon className="w-6 h-6" />
-      <div className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+      <Icon className="w-6 h-6"/>
+      <div
+        className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
         {title}
       </div>
     </Link>
@@ -42,16 +44,17 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
       <aside className="sidebar">
         <div className="py-4 flex flex-col items-center">
           <div className="mb-8">
-            <Share2 className="w-8 h-8 text-white" />
+            <Share2 className="w-8 h-8 text-white"/>
           </div>
 
           <nav className="flex-1 w-full space-y-1">
-            <SidebarItem to="/" icon={LayoutDashboard} title="Dashboard" />
-            <SidebarItem to="/prompts" icon={Wand2} title="Prompts" />
-            <SidebarItem to="/users" icon={Users} title="Benutzer" />
-            <SidebarItem to="/calendar" icon={Calendar} title="Kalender" />
-            <SidebarItem to="/documents" icon={FileText} title="Dokumente" />
-            <SidebarItem to="/reports" icon={BarChart} title="Berichte" />
+            <SidebarItem to="/" icon={LayoutDashboard} title="Dashboard"/>
+            <SidebarItem to="/prompts" icon={Wand2} title="Prompts"/>
+            <SidebarItem to="/files" icon={FolderOpen} title="Dateien"/>
+            <SidebarItem to="/users" icon={Users} title="Benutzer"/>
+            <SidebarItem to="/calendar" icon={Calendar} title="Kalender"/>
+            <SidebarItem to="/documents" icon={FileText} title="Dokumente"/>
+            <SidebarItem to="/reports" icon={BarChart} title="Berichte"/>
           </nav>
 
           <div className="mt-auto w-full">
@@ -60,7 +63,7 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
               className="sidebar-item w-full"
               title="Abmelden"
             >
-              <LogOut className="w-6 h-6" />
+              <LogOut className="w-6 h-6"/>
             </button>
           </div>
         </div>
@@ -73,7 +76,7 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
           <div className="h-full px-6 flex items-center justify-between">
             <div className="flex-1 max-w-xl">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5"/>
                 <input
                   type="text"
                   placeholder="Suchen..."
@@ -84,12 +87,12 @@ export function DashboardLayout({ children, onLogout }: DashboardLayoutProps) {
 
             <div className="flex items-center gap-4">
               <button className="p-2 text-gray-600 hover:text-gray-900 relative">
-                <Bell className="w-5 h-5" />
+                <Bell className="w-5 h-5"/>
                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </button>
 
               <button className="p-2 text-gray-600 hover:text-gray-900">
-                <Settings className="w-5 h-5" />
+                <Settings className="w-5 h-5"/>
               </button>
 
               <div className="h-8 w-px bg-gray-200"></div>

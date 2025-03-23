@@ -54,7 +54,7 @@ function handlePromptRoutes($endpoint) {
     // Neue Route für increment-success
     if (preg_match('/^prompts\/(\d+)\/increment-success$/', $endpoint, $matches)) {
         $promptId = $matches[1];
-
+        
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             try {
                 $prompt = $promptModel->getById($promptId);

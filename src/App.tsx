@@ -4,6 +4,7 @@ import {LoginPage} from './pages/Auth/LoginPage';
 import {DashboardLayout} from './templates/DashboardLayout/DashboardLayout';
 import {DashboardPage} from './pages/Dashboard/DashboardPage';
 import {PromptsPage} from './pages/Prompts/PromptsPage';
+import {FilesPage} from './pages/Files/FilesPage';
 import {AuthState} from './utils/types/auth';
 import {apiService} from './services/api/apiService';
 
@@ -82,6 +83,7 @@ function App() {
         <Routes>
           <Route path="/" element={<DashboardPage/>}/>
           <Route path="/prompts" element={<PromptsPage/>}/>
+          <Route path="/files" element={<FilesPage/>}/>
           <Route path="*" element={<Navigate to="/" replace/>}/>
         </Routes>
       </DashboardLayout>
