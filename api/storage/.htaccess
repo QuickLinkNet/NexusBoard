@@ -1,0 +1,2 @@
+# Verhindere direkten Zugriff auf Dateien
+Deny from all
