@@ -157,7 +157,7 @@ class ApiService {
     try {
       if (this.isBackendAvailable) {
         const response = await axios.put(`${BACKEND_URL}/prompts/${id}`, {
-          successful_runs: "10"
+          successful_runs: "5"
         }, {
           headers: this.getAuthHeaders()
         });
