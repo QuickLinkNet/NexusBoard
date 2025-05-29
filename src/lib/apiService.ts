@@ -112,7 +112,7 @@ class ApiService {
       const newPrompt = {
         id: String(dummyData.prompts.length + 1),
         ...promptData,
-        expected_runs: "10",
+        expected_runs: "5",
         successful_runs: "0"
       };
       dummyData.prompts.push(newPrompt);
