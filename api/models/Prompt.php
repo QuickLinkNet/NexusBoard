@@ -33,7 +33,7 @@ class Prompt {
             $data['title'],
             $data['prompt'],
             $data['keywords'],
-            $data['expected_runs'] ?? 10,
+            $data['expected_runs'] ?? 4,
             $data['successful_runs'] ?? 0
         ]);
 
